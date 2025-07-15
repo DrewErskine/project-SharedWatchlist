@@ -43,8 +43,32 @@ shared-watchlist/
 ├── backend/                # Spring Boot 3 Application
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── java/      # Java source files
-│   │   │   └── resources/ # Application properties
+│   │   │   ├── java/com/drewerskine/sharedwatchlist/
+│   │   │   │   ├── config/           # Configuration classes
+│   │   │   │   │   ├── SecurityConfig.java
+│   │   │   │   │   └── JwtAuthenticationFilter.java
+│   │   │   │   ├── controller/       # REST Controllers
+│   │   │   │   │   ├── AuthController.java
+│   │   │   │   │   └── WatchlistController.java
+│   │   │   │   ├── dto/              # Data Transfer Objects
+│   │   │   │   │   ├── AuthenticationRequest.java
+│   │   │   │   │   ├── AuthenticationResponse.java
+│   │   │   │   │   ├── WatchlistItemRequest.java
+│   │   │   │   │   └── WatchlistItemResponse.java
+│   │   │   │   ├── model/            # Entity classes
+│   │   │   │   │   ├── User.java
+│   │   │   │   │   ├── Role.java
+│   │   │   │   │   └── WatchlistItem.java
+│   │   │   │   ├── repository/       # JPA Repositories
+│   │   │   │   │   ├── UserRepository.java
+│   │   │   │   │   └── WatchlistItemRepository.java
+│   │   │   │   ├── service/          # Business Logic
+│   │   │   │   │   ├── AuthenticationService.java
+│   │   │   │   │   ├── JwtService.java
+│   │   │   │   │   └── WatchlistService.java
+│   │   │   │   └── SharedWatchlistApplication.java
+│   │   │   └── resources/
+│   │   │       └── application.yml    # Application config
 │   │   └── test/          # Test files
 │   └── pom.xml            # Maven dependencies
 │
