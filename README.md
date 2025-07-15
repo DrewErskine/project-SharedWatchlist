@@ -99,6 +99,127 @@ shared-watchlist/
 - **Build Tool**: Maven
 - **Testing**: JUnit 5 + Mockito
 
+#### Backend Structure
+```
+backend/
+├── src/main/java/com/drewerskine/sharedwatchlist/
+│   ├── config/                    # Configuration classes
+│   │   ├── ApplicationConfig      # Core application config
+│   │   ├── SecurityConfig        # Security settings
+│   │   ├── JwtAuthenticationFilter
+│   │   ├── OpenApiConfig        # Swagger/OpenAPI config
+│   │   └── CorsConfig           # CORS settings
+│   │
+│   ├── controller/               # REST Controllers
+│   │   ├── AuthController       # Authentication endpoints
+│   │   └── WatchlistController  # Watchlist management
+│   │
+│   ├── dto/                      # Data Transfer Objects
+│   │   ├── AuthenticationRequest
+│   │   ├── AuthenticationResponse
+│   │   ├── WatchlistItemRequest
+│   │   └── WatchlistItemResponse
+│   │
+│   ├── exception/               # Exception handling
+│   │   ├── ApiError            # Error response structure
+│   │   └── GlobalExceptionHandler
+│   │
+│   ├── model/                   # Entity classes
+│   │   ├── User                # User entity
+│   │   ├── Role                # User roles enum
+│   │   └── WatchlistItem       # Watchlist entity
+│   │
+│   ├── repository/             # Data access layer
+│   │   ├── UserRepository
+│   │   └── WatchlistItemRepository
+│   │
+│   ├── service/                # Business logic
+│   │   ├── AuthenticationService
+│   │   ├── JwtService
+│   │   └── WatchlistService
+│   │
+│   └── SharedWatchlistApplication.java  # Main class
+│
+└── src/main/resources/
+    └── application.yml         # Application properties
+
+#### Backend Features
+1. **Authentication & Authorization**
+   - JWT-based authentication
+   - Role-based access control
+   - Secure password hashing
+   - Token-based session management
+
+2. **RESTful APIs**
+   - Authentication endpoints
+     ```
+     POST /api/v1/auth/register  # Register new user
+     POST /api/v1/auth/login     # Login user
+     ```
+   - Watchlist endpoints
+     ```
+     GET    /api/v1/watchlist           # Get watchlist
+     POST   /api/v1/watchlist           # Add item
+     PUT    /api/v1/watchlist/{id}      # Update item
+     DELETE /api/v1/watchlist/{id}      # Delete item
+     POST   /api/v1/watchlist/{id}/vote # Vote for item
+     ```
+
+3. **Database Schema**
+   ```sql
+   -- Users table
+   CREATE TABLE _user (
+       id BIGINT PRIMARY KEY,
+       firstname VARCHAR(255),
+       lastname VARCHAR(255),
+       email VARCHAR(255) UNIQUE,
+       password VARCHAR(255),
+       role VARCHAR(50)
+   );
+
+   -- Watchlist items table
+   CREATE TABLE watchlist_items (
+       id BIGINT PRIMARY KEY,
+       title VARCHAR(255),
+       description TEXT,
+       poster_url VARCHAR(255),
+       type VARCHAR(50),
+       year INTEGER,
+       genre VARCHAR(100),
+       rating DOUBLE PRECISION,
+       runtime INTEGER,
+       added_by_user_id BIGINT,
+       created_at TIMESTAMP,
+       updated_at TIMESTAMP,
+       watched_at TIMESTAMP,
+       FOREIGN KEY (added_by_user_id) REFERENCES _user(id)
+   );
+
+   -- Votes junction table
+   CREATE TABLE watchlist_item_votes (
+       watchlist_item_id BIGINT,
+       user_id BIGINT,
+       PRIMARY KEY (watchlist_item_id, user_id),
+       FOREIGN KEY (watchlist_item_id) REFERENCES watchlist_items(id),
+       FOREIGN KEY (user_id) REFERENCES _user(id)
+   );
+   ```
+
+4. **Security Features**
+   - CORS configuration for frontend access
+   - CSRF protection
+   - Password encryption
+   - JWT token validation
+   - Protected endpoints
+   - Request validation
+
+5. **API Documentation**
+   - Swagger UI available at `/swagger-ui.html`
+   - OpenAPI 3.0 specification
+   - Detailed endpoint documentation
+   - Request/Response examples
+   - Authentication documentation
+
 ### DevOps
 - **CI/CD**: GitHub Actions
 - **Infrastructure**: Terraform
